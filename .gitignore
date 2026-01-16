@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+*.db
+data/*.db
+
+# Streamlit
+.streamlit/
