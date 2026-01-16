@@ -1,7 +1,7 @@
 """Shift progress calculations for TV dashboard."""
 
 from datetime import datetime, date
-from .database import query_one, query_df
+from .database import query_one
 
 
 def get_current_shift() -> str:
@@ -11,7 +11,9 @@ def get_current_shift() -> str:
     return "day" if 6 <= hour < 18 else "night"
 
 
-def calculate_shift_workload(shift: str | None = None, target_date: date | None = None) -> dict:
+def calculate_shift_workload(
+    shift: str | None = None, target_date: date | None = None
+) -> dict:
     """
     Calculate shift workload metrics.
 
@@ -48,7 +50,7 @@ def calculate_shift_workload(shift: str | None = None, target_date: date | None 
     vehicle_stats = query_one(vehicles_query, (shift, date_str))
 
     if not vehicle_stats:
-        vehicle_stats = {'total_vehicles': 0, 'total_hours': 0, 'completed_vehicles': 0}
+        vehicle_stats = {"total_vehicles": 0, "total_hours": 0, "completed_vehicles": 0}
 
     # Get completed work hours from work orders
     completed_query = """
@@ -60,7 +62,7 @@ def calculate_shift_workload(shift: str | None = None, target_date: date | None 
         AND wo.status = 'complete'
     """
     completed_stats = query_one(completed_query, (shift, date_str))
-    completed_hours = completed_stats['completed_hours'] if completed_stats else 0
+    completed_hours = completed_stats["completed_hours"] if completed_stats else 0
 
     # Get carryover from previous shift
     carryover_query = """
@@ -72,36 +74,38 @@ def calculate_shift_workload(shift: str | None = None, target_date: date | None 
         LIMIT 1
     """
     carryover_stats = query_one(carryover_query, (date_str, shift))
-    carryover_hours = carryover_stats['carryover_hours'] if carryover_stats else 0
+    carryover_hours = carryover_stats["carryover_hours"] if carryover_stats else 0
 
-    new_hours = float(vehicle_stats['total_hours'])
+    new_hours = float(vehicle_stats["total_hours"])
     total_hours = new_hours + carryover_hours
 
-    percent_complete = int((completed_hours / total_hours * 100) if total_hours > 0 else 0)
+    percent_complete = int(
+        (completed_hours / total_hours * 100) if total_hours > 0 else 0
+    )
 
     return {
-        'shift': shift,
-        'date': date_str,
-        'new_hours': new_hours,
-        'carryover_hours': carryover_hours,
-        'total_hours': total_hours,
-        'completed_hours': completed_hours,
-        'percent_complete': percent_complete,
-        'vehicles_total': vehicle_stats['total_vehicles'],
-        'vehicles_completed': vehicle_stats['completed_vehicles']
+        "shift": shift,
+        "date": date_str,
+        "new_hours": new_hours,
+        "carryover_hours": carryover_hours,
+        "total_hours": total_hours,
+        "completed_hours": completed_hours,
+        "percent_complete": percent_complete,
+        "vehicles_total": vehicle_stats["total_vehicles"],
+        "vehicles_completed": vehicle_stats["completed_vehicles"],
     }
 
 
 def get_demo_data() -> dict:
     """Return demo data when database is not available."""
     return {
-        'shift': get_current_shift(),
-        'date': date.today().isoformat(),
-        'new_hours': 126.0,
-        'carryover_hours': 6.0,
-        'total_hours': 132.0,
-        'completed_hours': 87.0,
-        'percent_complete': 65,  # int(87/132*100) = 65
-        'vehicles_total': 48,
-        'vehicles_completed': 32
+        "shift": get_current_shift(),
+        "date": date.today().isoformat(),
+        "new_hours": 126.0,
+        "carryover_hours": 6.0,
+        "total_hours": 132.0,
+        "completed_hours": 87.0,
+        "percent_complete": 65,  # int(87/132*100) = 65
+        "vehicles_total": 48,
+        "vehicles_completed": 32,
     }

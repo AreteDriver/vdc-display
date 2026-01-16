@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="VDC Shift Progress",
     page_icon="📊",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
 # TV-optimized CSS
@@ -150,7 +150,7 @@ def load_data() -> tuple[dict, list[dict]]:
         from modules.stage_breakdown import get_stage_breakdown
 
         shift_data = calculate_shift_workload()
-        stage_data = get_stage_breakdown(shift_data['shift'])
+        stage_data = get_stage_breakdown(shift_data["shift"])
         return shift_data, stage_data
     except Exception:
         # Fall back to demo data if database unavailable
@@ -168,24 +168,27 @@ def main():
     # Auto-refresh meta tag
     st.markdown(
         f'<meta http-equiv="refresh" content="{REFRESH_INTERVAL_MS // 1000}">',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     # Load data
     shift_data, stage_data = load_data()
 
     # Shift header
-    shift_label = "Day Shift" if shift_data['shift'] == 'day' else "Night Shift"
-    st.markdown(f'<div class="shift-header">📊 {shift_label} Progress</div>', unsafe_allow_html=True)
+    shift_label = "Day Shift" if shift_data["shift"] == "day" else "Night Shift"
+    st.markdown(
+        f'<div class="shift-header">📊 {shift_label} Progress</div>',
+        unsafe_allow_html=True,
+    )
 
     # Carryover note (if applicable)
-    if shift_data['carryover_hours'] > 0:
+    if shift_data["carryover_hours"] > 0:
         st.markdown(
             f'<div class="carryover-note">'
-            f'⚠️ {shift_data["total_hours"]:.0f} hours '
-            f'({shift_data["new_hours"]:.0f} new + {shift_data["carryover_hours"]:.0f} carryover)'
-            f'</div>',
-            unsafe_allow_html=True
+            f"⚠️ {shift_data['total_hours']:.0f} hours "
+            f"({shift_data['new_hours']:.0f} new + {shift_data['carryover_hours']:.0f} carryover)"
+            f"</div>",
+            unsafe_allow_html=True,
         )
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -197,42 +200,45 @@ def main():
         st.markdown(
             f'<p class="big-number">{shift_data["completed_hours"]:.0f}</p>'
             f'<p class="metric-label">Hours Complete</p>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
     with col2:
         st.markdown(
-            f'<p class="medium-number" style="color: #888888;">/</p>',
-            unsafe_allow_html=True
+            '<p class="medium-number" style="color: #888888;">/</p>',
+            unsafe_allow_html=True,
         )
 
     with col3:
         st.markdown(
             f'<p class="big-number">{shift_data["total_hours"]:.0f}</p>'
             f'<p class="metric-label">Total Hours</p>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
     # Progress bar
-    progress_class = get_progress_class(shift_data['percent_complete'])
+    progress_class = get_progress_class(shift_data["percent_complete"])
     st.markdown(
         f'<div class="progress-container">'
         f'<div class="progress-bar {progress_class}" style="width: {shift_data["percent_complete"]}%;"></div>'
-        f'</div>',
-        unsafe_allow_html=True
+        f"</div>",
+        unsafe_allow_html=True,
     )
 
     # Percentage display
     st.markdown(
         f'<p class="big-number" style="font-size: 120px;">{shift_data["percent_complete"]}%</p>'
         f'<p class="metric-label">Complete</p>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
     # Stage breakdown
-    st.markdown('<div class="shift-header" style="font-size: 36px;">Stage Breakdown</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="shift-header" style="font-size: 36px;">Stage Breakdown</div>',
+        unsafe_allow_html=True,
+    )
 
     cols = st.columns(len(stage_data)) if stage_data else []
 
@@ -243,8 +249,8 @@ def main():
                 f'<div class="stage-name">{stage["stage_name"]}</div>'
                 f'<div class="stage-percent">{stage["percent_complete"]}%</div>'
                 f'<div class="stage-detail">{stage["vehicle_count"]} vehicles</div>'
-                f'</div>',
-                unsafe_allow_html=True
+                f"</div>",
+                unsafe_allow_html=True,
             )
 
     # Vehicles count
@@ -255,21 +261,21 @@ def main():
         st.markdown(
             f'<p class="medium-number">{shift_data["vehicles_completed"]}</p>'
             f'<p class="metric-label">Vehicles Completed</p>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
     with vcol2:
         st.markdown(
             f'<p class="medium-number">{shift_data["vehicles_total"]}</p>'
             f'<p class="metric-label">Total Vehicles</p>',
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
     # Timestamp
     st.markdown(
         f'<div class="timestamp">Last Updated: {datetime.now().strftime("%I:%M %p")} • '
-        f'Auto-refresh every {REFRESH_INTERVAL_MS // 60000} minutes</div>',
-        unsafe_allow_html=True
+        f"Auto-refresh every {REFRESH_INTERVAL_MS // 60000} minutes</div>",
+        unsafe_allow_html=True,
     )
 
 
