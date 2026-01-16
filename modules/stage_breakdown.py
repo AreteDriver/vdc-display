@@ -74,7 +74,7 @@ def get_demo_stages() -> list[dict]:
             'vehicle_count': 8,
             'hours_remaining': 12.0,
             'hours_completed': 24.0,
-            'percent_complete': 67
+            'percent_complete': 66  # int(24/36*100) = 66
         },
         {
             'stage_name': 'Shuttle',

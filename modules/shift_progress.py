@@ -101,7 +101,7 @@ def get_demo_data() -> dict:
         'carryover_hours': 6.0,
         'total_hours': 132.0,
         'completed_hours': 87.0,
-        'percent_complete': 66,
+        'percent_complete': 65,  # int(87/132*100) = 65
         'vehicles_total': 48,
         'vehicles_completed': 32
     }
