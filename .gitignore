@@ -1,18 +1,9 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
+*.pyc
 .venv/
-venv/
+*.egg-info/
+
+# Secrets
 .env
-
-# IDE
-.vscode/
-.idea/
-
-# Data
-*.db
-data/*.db
-
-# Streamlit
-.streamlit/
+.env.*
+!.env.example
